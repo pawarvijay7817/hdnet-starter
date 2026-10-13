@@ -1,0 +1,79 @@
+<header class="toolbar">
+  <div>
+    <h1>HDNet</h1>
+    <p>Order Lookup</p>
+  </div>
+
+  <div class="user-actions">
+    <span>{{ user()?.displayName }}</span>
+    <button mat-button type="button" (click)="signOut()">Sign Out</button>
+  </div>
+</header>
+
+<main class="page-content">
+  <h2>Orders</h2>
+
+  @if (loading) {
+    <div class="state-message" role="status">
+      <mat-spinner diameter="32" />
+      <p>Loading orders...</p>
+    </div>
+  } @else if (errorMessage) {
+    <div class="state-message" role="alert">
+      <p>{{ errorMessage }}</p>
+      <button mat-button type="button" (click)="loadOrders()">Try Again</button>
+    </div>
+  } @else if (orders.length === 0) {
+    <p class="state-message">No orders found.</p>
+  } @else {
+    <div class="table-container">
+      <table mat-table [dataSource]="orders">
+        <ng-container matColumnDef="orderNumber">
+          <th mat-header-cell *matHeaderCellDef>Order #</th>
+          <td mat-cell *matCellDef="let order">{{ order.orderNumber }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="orderDate">
+          <th mat-header-cell *matHeaderCellDef>Order Date</th>
+          <td mat-cell *matCellDef="let order">{{ order.orderDate }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let order">{{ order.status }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="rxCount">
+          <th mat-header-cell *matHeaderCellDef>Rx Count</th>
+          <td mat-cell *matCellDef="let order">{{ order.rxCount }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="shipToState">
+          <th mat-header-cell *matHeaderCellDef>Ship-To State</th>
+          <td mat-cell *matCellDef="let order">{{ order.shipToState }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let order">
+            @if (canCancel(order)) {
+              <button mat-button type="button" (click)="openCancelDialog(order)">Cancel</button>
+            }
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+
+    <mat-paginator
+      [length]="totalItems"
+      [pageIndex]="pageIndex"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[25, 50, 100]"
+      (page)="onPageChange($event)"
+      aria-label="Order pages"
+    />
+  }
+</main>

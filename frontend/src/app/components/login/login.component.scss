@@ -1,0 +1,24 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-card {
+  width: 350px;
+  padding: 20px;
+}
+
+mat-form-field {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.login-button {
+  width: 100%;
+}
+
+.error-message {
+  color: #b3261e;
+  margin: 0;
+}
